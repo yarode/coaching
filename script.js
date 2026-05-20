@@ -7,7 +7,7 @@ if (year) {
 }
 
 if (form && feedback) {
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!form.reportValidity()) {
@@ -15,21 +15,33 @@ if (form && feedback) {
       return;
     }
 
-    const formData = new FormData(form);
-    const entry = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      focus: formData.get("focus"),
-      goal: formData.get("goal"),
-      submittedAt: new Date().toISOString(),
-    };
+    const submitBtn = form.querySelector("button[type=submit]");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
+    feedback.textContent = "";
 
-    const existingEntries = JSON.parse(localStorage.getItem("coachingLeads") || "[]");
-    existingEntries.push(entry);
-    localStorage.setItem("coachingLeads", JSON.stringify(existingEntries));
+    try {
+      const response = await fetch("https://formspree.io/f/mqejejrj", {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      });
 
-    form.reset();
-    feedback.textContent =
-      "Thanks. Your application has been saved and you can now follow up with your preferred backend or CRM integration.";
+      if (response.ok) {
+        form.reset();
+        feedback.textContent = "Application sent. I will be in touch within 24 hours.";
+        submitBtn.textContent = "Sent";
+      } else {
+        feedback.style.color = "#c0392b";
+        feedback.textContent = "Something went wrong. Please try again or email me directly.";
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send my application";
+      }
+    } catch {
+      feedback.style.color = "#c0392b";
+      feedback.textContent = "Could not send. Please check your connection and try again.";
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Send my application";
+    }
   });
 }

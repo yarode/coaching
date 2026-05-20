@@ -215,7 +215,7 @@ h3 { font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 700; }
   gap: 1.25rem;
 }
 
-.testimonial-card { margin: 0; position: relative; }
+.testimonial-card { margin: 0; position: relative; display: flex; flex-direction: column; }
 
 .testimonial-card::before {
   content: "\201C";
@@ -230,16 +230,31 @@ h3 { font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 700; }
 }
 
 .testimonial-card blockquote {
-  margin: 1.5rem 0 1.25rem;
+  margin: 1.5rem 0 0;
   font-size: 1rem;
   font-style: italic;
   color: var(--text-muted);
+  flex: 1;
 }
 
 .testimonial-card figcaption {
-  font-size: 0.9rem;
-  font-weight: 600;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.tc-name {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.tc-meta {
+  display: block;
+  font-size: 0.85rem;
   color: var(--text-muted);
+  margin-top: 0.2rem;
 }
 
 /* OFFER */
